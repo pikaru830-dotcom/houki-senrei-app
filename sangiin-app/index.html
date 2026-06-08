@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="format-detection" content="telephone=no">
+  <title>参議院法規先例アプリ</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- アプリ全体のラッパー -->
+  <div id="app">
+
+    <!-- ========== トップバー（共通） ========== -->
+    <header id="topbar" class="topbar">
+      <button id="btn-back" class="btn-back" aria-label="戻る">‹</button>
+      <div class="topbar-badge">参</div>
+      <div class="topbar-title" id="topbar-title">参議院法規先例アプリ</div>
+    </header>
+
+    <!-- ========== サブバー（画面によって表示） ========== -->
+    <div id="subbar" class="subbar" style="display:none;">
+      <span id="subbar-text"></span>
+    </div>
+
+    <!-- ========== 画面コンテンツエリア ========== -->
+    <main id="content" class="content">
+
+      <!-- ===== トップ画面 ===== -->
+      <section id="screen-home" class="screen">
+        <div class="home-header">
+          <div class="home-header-sub">参議院事務局　職員専用</div>
+        </div>
+        <div class="section-label">法規</div>
+        <div id="home-laws" class="list"></div>
+        <div class="section-label">先例</div>
+        <div id="home-senrei" class="list"></div>
+      </section>
+
+      <!-- ===== 法規閲覧画面（条文一覧） ===== -->
+      <section id="screen-law" class="screen" style="display:none;">
+        <div id="law-list" class="list"></div>
+      </section>
+
+      <!-- ===== 法規条文詳細画面 ===== -->
+      <section id="screen-law-article" class="screen" style="display:none;">
+        <div id="law-article-body" class="detail-body"></div>
+        <!-- お気に入り・共有は実装保留のためUI非表示（display:none）。JS実装(js/app.js)は残置。
+             復活時は下記アクションバーの style="display:none;" を外すだけでよい。 -->
+        <div class="detail-actionbar" style="display:none;">
+          <button id="btn-law-bookmark" class="action-btn">お気に入り</button>
+          <button id="btn-law-share" class="action-btn">共有</button>
+        </div>
+      </section>
+
+      <!-- ===== 先例録目次画面 ===== -->
+      <section id="screen-toc" class="screen" style="display:none;">
+        <div id="toc-list" class="list"></div>
+      </section>
+
+      <!-- ===== 章内先例一覧画面 ===== -->
+      <section id="screen-chapter" class="screen" style="display:none;">
+        <div id="chapter-list" class="list"></div>
+      </section>
+
+      <!-- ===== 先例詳細画面 ===== -->
+      <section id="screen-detail" class="screen" style="display:none;">
+        <div id="detail-body" class="detail-body"></div>
+        <!-- お気に入り・共有は実装保留のためUI非表示（display:none）。JS実装(js/app.js)は残置。
+             復活時は下記アクションバーの style="display:none;" を外すだけでよい。 -->
+        <div class="detail-actionbar" style="display:none;">
+          <button id="btn-bookmark" class="action-btn">お気に入り</button>
+          <button id="btn-share" class="action-btn">共有</button>
+        </div>
+      </section>
+
+      <!-- ===== 全文検索画面 ===== -->
+      <section id="screen-search" class="screen" style="display:none;">
+        <div class="search-header">
+          <input id="search-input" type="search" class="search-input"
+                 placeholder="法規・先例の番号・タイトル・本文を検索" autocomplete="off">
+        </div>
+        <div id="search-results" class="list search-results"></div>
+        <div id="search-empty" class="empty-message" style="display:none;">
+          該当する条文・先例が見つかりませんでした。
+        </div>
+      </section>
+
+      <!-- ===== 保存済み先例画面 ===== -->
+      <section id="screen-bookmark" class="screen" style="display:none;">
+        <div id="bookmark-list" class="list"></div>
+        <div id="bookmark-empty" class="empty-message" style="display:none;">
+          お気に入りに登録された項目はありません。
+        </div>
+      </section>
+
+    </main>
+
+    <!-- ========== ボトムナビゲーション ========== -->
+    <nav id="bottomnav" class="bottomnav">
+      <button class="navbtn" data-nav="home">
+        <span class="navicon">⌂</span>
+        <span class="navlabel">ホーム</span>
+      </button>
+      <button class="navbtn" data-nav="search">
+        <span class="navicon">⌕</span>
+        <span class="navlabel">検索</span>
+      </button>
+      <!-- お気に入りは実装保留のためUI非表示（display:none）。JS実装(js/app.js)は残置。
+           復活時はこのボタンの style="display:none;" を外すだけでよい。 -->
+      <button class="navbtn" data-nav="bookmark" style="display:none;">
+        <span class="navicon">★</span>
+        <span class="navlabel">お気に入り</span>
+      </button>
+    </nav>
+
+  </div>
+
+  <!-- ========== エラーメッセージ ========== -->
+  <div id="error-overlay" class="error-overlay" style="display:none;">
+    <div class="error-box">
+      <div class="error-title">読み込みエラー</div>
+      <div class="error-text" id="error-text"></div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>

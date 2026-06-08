@@ -1,0 +1,1148 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   参議院法規先例アプリ　スタイルシート
+   - スマートフォン優先のレスポンシブデザイン
+   - スカイブルー基調、カード型のモダンUI
+   - カラー・サイズはCSSカスタムプロパティで一元管理
+   ========================================================================== */
+
+:root {
+  /* ===== ブランドカラー（スカイブルー系） ===== */
+  --brand:        #4A90C2;   /* メイン：落ち着いた水色 */
+  --brand-dark:   #2C5F8C;   /* 深め：見出し・強調文字 */
+  --brand-tint:   #6FB3D9;   /* 明るめ：グラデ・アクセント */
+  --brand-light:  #E3EDF6;   /* 淡い：チップ・バッジ背景 */
+  --brand-pale:   #F0F6FB;   /* さらに淡い：ホバー・サブ面 */
+
+  /* ===== 中立色 ===== */
+  --bg:           #F5F8FC;   /* アプリ全体背景 */
+  --surface:      #FFFFFF;   /* カード・面 */
+  --text:         #1F3A5F;   /* 本文 */
+  --text-sub:     #7A92AD;   /* サブテキスト */
+  --text-mute:    #A8B8CC;   /* 補足・プレースホルダ */
+  --border:       #DCE5EF;   /* 境界線 */
+  --border-soft:  #ECF1F7;   /* さらに薄い境界 */
+
+  /* ===== 関連法規／参照ブロック ===== */
+  --law-bg:       #E8F1F9;
+  --law-border:   #92BCD9;
+  --law-text:     #2C5F8C;
+  --ref-bg:       #F0F6FB;
+  --ref-border:   #B5D0E5;
+  --ref-text:     #4A90C2;
+
+  /* ===== 検索ハイライト・削除アクション ===== */
+  --mark-bg:      #FFE89B;
+  --danger-bg:    #FCE4E4;
+  --danger-text:  #C75050;
+
+  /* ===== 影 ===== */
+  --shadow-sm:    0 1px 2px rgba(74, 144, 194, 0.06);
+  --shadow-md:    0 2px 8px rgba(31, 58, 95, 0.08);
+  --shadow-lg:    0 12px 36px rgba(31, 58, 95, 0.15);
+  --shadow-brand: 0 2px 6px rgba(74, 144, 194, 0.28);
+
+  /* ===== サイズ ===== */
+  --topbar-h:    56px;
+  --subbar-h:    34px;
+  --bottomnav-h: 60px;
+  --radius-sm:   8px;
+  --radius-md:   12px;
+  --radius-lg:   16px;
+}
+
+/* ===== リセット ===== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans",
+               "Yu Gothic UI", "Noto Sans JP", "Meiryo", sans-serif;
+  font-size: 14px;
+  line-height: 1.55;
+  letter-spacing: 0.01em;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: "palt";
+  overflow: hidden;
+}
+
+button {
+  font-family: inherit;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: inherit;
+  outline: none;
+}
+
+button:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+input {
+  font-family: inherit;
+}
+
+/* スクロールバーを非表示（モバイル向け） */
+.content::-webkit-scrollbar,
+.detail-body::-webkit-scrollbar {
+  display: none;
+}
+.content,
+.detail-body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+/* ===== アプリ全体レイアウト ===== */
+#app {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* タブレット以上：中央寄せ＋角丸の枠 */
+@media (min-width: 768px) {
+  body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #E3EDF6 0%, #F5F8FC 100%);
+  }
+  #app {
+    max-width: 480px;
+    height: 100vh;
+    max-height: 900px;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+  }
+}
+
+/* ===== トップバー ===== */
+.topbar {
+  flex: 0 0 var(--topbar-h);
+  height: var(--topbar-h);
+  background: var(--surface);
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  position: relative;
+  z-index: 10;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.btn-back {
+  width: 36px;
+  height: 36px;
+  font-size: 26px;
+  color: var(--brand);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  margin-right: 4px;
+  border-radius: 50%;
+  transition: background 0.15s;
+}
+
+.btn-back.visible {
+  display: flex;
+}
+
+.btn-back:active {
+  background: var(--brand-light);
+}
+
+.topbar-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-tint) 100%);
+  color: var(--surface);
+  font-weight: 700;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-brand);
+}
+
+.topbar-title {
+  color: var(--brand-dark);
+  font-size: 15px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
+/* ===== サブバー ===== */
+.subbar {
+  flex: 0 0 var(--subbar-h);
+  height: var(--subbar-h);
+  background: var(--brand-pale);
+  color: var(--brand-dark);
+  font-size: 11.5px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+/* ===== コンテンツエリア ===== */
+.content {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--bg);
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100%;
+}
+
+/* ===== ボトムナビゲーション ===== */
+.bottomnav {
+  flex: 0 0 auto;
+  height: calc(var(--bottomnav-h) + env(safe-area-inset-bottom, 0px));
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  background: var(--surface);
+  border-top: 1px solid var(--border-soft);
+  display: flex;
+  z-index: 10;
+}
+
+.navbtn {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  color: var(--text-sub);
+  font-size: 11px;
+  padding: 8px 0 6px;
+  position: relative;
+  transition: color 0.15s;
+}
+
+.navbtn.active {
+  color: var(--brand);
+}
+
+.navbtn.active::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 28px;
+  height: 3px;
+  background: var(--brand);
+  border-radius: 0 0 3px 3px;
+}
+
+.navicon {
+  font-size: 22px;
+  line-height: 1;
+  transition: transform 0.15s;
+}
+
+.navbtn.active .navicon {
+  transform: scale(1.08);
+}
+
+.navlabel {
+  font-size: 10.5px;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+}
+
+/* ===== トップ画面：ヘッダー部（コンパクトな帯） ===== */
+.home-header {
+  background: linear-gradient(135deg, #EAF3FA 0%, #F5F8FC 100%);
+  padding: 14px 20px 12px;
+  color: var(--brand-dark);
+  position: relative;
+}
+
+.home-header::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg,
+              var(--brand) 0%, var(--brand-tint) 50%, var(--brand-light) 100%);
+}
+
+.home-header-sub {
+  color: var(--brand-dark);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+/* ===== セクションラベル ===== */
+.section-label {
+  color: var(--text-sub);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 18px 18px 8px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+/* ===== リスト共通（カード型） ===== */
+.list {
+  display: flex;
+  flex-direction: column;
+  padding: 0 12px 12px;
+  gap: 8px;
+}
+
+.list-item {
+  display: flex;
+  align-items: center;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  min-height: 60px;
+  text-align: left;
+  width: 100%;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s, background 0.15s;
+}
+
+.list-item:active {
+  transform: scale(0.985);
+  background: var(--brand-pale);
+}
+
+.list-item .icon-box {
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: -0.06em;
+  line-height: 1;
+  text-align: center;
+}
+
+.list-item .icon-box.law-icon {
+  background: var(--brand-light);
+  color: var(--brand-dark);
+}
+
+.list-item .icon-box.senrei-icon {
+  background: #E8F2DC;
+  color: #5D7A3F;
+}
+
+.list-item .item-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.list-item .item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.list-item .item-sub {
+  font-size: 11.5px;
+  color: var(--text-sub);
+}
+
+.list-item .item-arrow {
+  color: var(--text-mute);
+  font-size: 20px;
+  margin-left: 8px;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+/* ===== 章バッジ（先例録目次） ===== */
+.chapter-badge {
+  width: 52px;
+  height: 46px;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-tint) 100%);
+  color: var(--surface);
+  font-weight: 700;
+  font-size: 12px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  flex-shrink: 0;
+  text-align: center;
+  white-space: nowrap;
+  box-shadow: var(--shadow-brand);
+}
+
+/* ===== 節・款のヘッダー（章内一覧） ===== */
+.section-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand);
+  padding: 12px 6px 4px;
+  letter-spacing: 0.06em;
+  background: transparent;
+}
+
+.section-header:first-child {
+  padding-top: 6px;
+}
+
+/* ===== 章ごとの折り畳みグループ（法規一覧で使用） ===== */
+.chapter-group {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+  overflow: hidden;
+}
+
+.chapter-group-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 14px;
+  background: var(--surface);
+  text-align: left;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+  min-height: 54px;
+  gap: 10px;
+}
+
+.chapter-group-header:active {
+  background: var(--brand-pale);
+}
+
+.chapter-group-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.chapter-group-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.02em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.chapter-group-range {
+  font-size: 11.5px;
+  color: var(--brand);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.chapter-group-caret {
+  font-size: 20px;
+  color: var(--text-mute);
+  line-height: 1;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s;
+}
+
+.chapter-group.open .chapter-group-caret {
+  transform: rotate(90deg);
+  color: var(--brand);
+}
+
+/* 折り畳みアニメーション: 外側のmax-heightをトランジション */
+.chapter-group-body-outer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chapter-group.open .chapter-group-body-outer {
+  /* 節を全部開いても収まるよう、十分大きめに */
+  max-height: 12000px;
+}
+
+.chapter-group-body {
+  border-top: 1px solid var(--border-soft);
+  padding: 4px 6px 8px;
+}
+
+/* 章グループ内の条文アイテムは「シャドウ無しのフラット」スタイル */
+.chapter-group-body .list-item {
+  background: transparent;
+  box-shadow: none;
+  border-radius: 8px;
+  min-height: 48px;
+  padding: 10px;
+  margin-top: 2px;
+}
+
+.chapter-group-body .list-item:first-child {
+  margin-top: 4px;
+}
+
+.chapter-group-body .list-item:active {
+  background: var(--brand-pale);
+  transform: none;
+}
+
+/* ===== 先例番号バッジ（章内一覧） ===== */
+.precedent-number-badge {
+  background: var(--brand-light);
+  color: var(--brand-dark);
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  padding: 5px 8px;
+  margin-right: 12px;
+  flex-shrink: 0;
+  min-width: 44px;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ===== 先例詳細画面 ===== */
+.detail-body {
+  flex: 1;
+  background: var(--bg);
+  padding: 16px 14px 20px;
+  overflow-y: auto;
+}
+
+.detail-breadcrumb {
+  font-size: 11.5px;
+  color: var(--text-sub);
+  margin-bottom: 12px;
+  padding: 0 4px;
+  letter-spacing: 0.02em;
+}
+
+.detail-number {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--brand) 0%, var(--brand-tint) 100%);
+  color: var(--surface);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  margin: 0 4px 12px;
+  letter-spacing: 0.05em;
+  box-shadow: var(--shadow-brand);
+}
+
+.detail-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 4px 14px;
+  line-height: 1.45;
+  letter-spacing: 0.02em;
+}
+
+/* 旧デザインの区切り線は非表示（カード化で不要） */
+.detail-divider {
+  display: none;
+}
+
+.detail-text {
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  font-size: 14.5px;
+  line-height: 2;
+  letter-spacing: 0.03em;
+  color: var(--text);
+  word-break: break-word;
+  box-shadow: var(--shadow-sm);
+}
+
+/* 旧スキーマ（プレーンテキストの法令）用フォールバック */
+.detail-text.plain {
+  white-space: pre-wrap;
+}
+
+/* 先例本文の段落（PDF上の改行を保持） */
+.detail-paragraph {
+  margin: 0 0 0.7em 0;
+}
+.detail-paragraph:last-child {
+  margin-bottom: 0;
+}
+
+/* ===== 項（kou）と号（gou）の構造化表示 ===== */
+.kou {
+  display: block;
+  margin-bottom: 8px;
+}
+
+.kou:last-child {
+  margin-bottom: 0;
+}
+
+/* 第２項以降の番号プレフィックス */
+.kou.kou-numbered .kou-num {
+  display: inline-block;
+  font-weight: 600;
+  margin-right: 8px;
+  color: var(--brand-dark);
+}
+
+.kou-text {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+/* 号リスト（漢数字＋本文） */
+.gou-list {
+  list-style: none;
+  padding: 0;
+  margin: 6px 0 10px 1.2em;
+}
+
+.gou-item {
+  position: relative;
+  margin-bottom: 4px;
+  padding-left: 2.2em;
+  line-height: 1.95;
+}
+
+.gou-num {
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--brand-dark);
+  font-weight: 600;
+  min-width: 1.8em;
+  text-align: left;
+}
+
+.gou-text {
+  display: inline;
+  white-space: pre-wrap;
+}
+
+/* ===== 章内ヘッダ（空節・空款の静的ラベル用） ===== */
+.subsection-header {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--brand-dark);
+  padding: 10px 6px 4px;
+  letter-spacing: 0.04em;
+}
+
+.subsubsection-header {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-sub);
+  padding: 6px 14px 2px;
+  letter-spacing: 0.02em;
+}
+
+/* 空節（削除等）はやや薄く表示 */
+.section-empty {
+  opacity: 0.5;
+  font-weight: 600;
+}
+
+/* ===== 節・款の折り畳みグループ（章の中にネスト） ===== */
+.section-group {
+  background: var(--brand-pale);
+  border-radius: var(--radius-sm);
+  margin-top: 4px;
+  overflow: hidden;
+}
+
+.section-group-header {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 9px 10px;
+  background: transparent;
+  text-align: left;
+  border: none;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s;
+  min-height: 38px;
+  gap: 8px;
+}
+
+.section-group-header:active {
+  background: var(--brand-light);
+}
+
+.section-group-info {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.section-group-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--brand-dark);
+  letter-spacing: 0.04em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-group-range {
+  font-size: 10.5px;
+  color: var(--brand);
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.section-group-caret {
+  font-size: 16px;
+  color: var(--text-mute);
+  line-height: 1;
+  display: inline-block;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), color 0.2s;
+}
+
+.section-group.open > .section-group-header .section-group-caret {
+  transform: rotate(90deg);
+  color: var(--brand);
+}
+
+.section-group-body-outer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: var(--surface);
+}
+
+/* 直接子のみ開く。節(.open)の中に入れ子の款(.section-group)があっても、
+   款は自身が .open のときだけ開く（子孫セレクタだと親の開で款まで開いてしまう） */
+.section-group.open > .section-group-body-outer {
+  max-height: 6000px;
+}
+
+.section-group-body {
+  padding: 2px 4px 4px;
+}
+
+/* ===== 法令メタ情報バナー（条文一覧の最上部に1度だけ） ===== */
+.law-meta-banner {
+  background: var(--brand-pale);
+  border-radius: var(--radius-sm);
+  padding: 8px 14px;
+  margin-top: 4px;
+  color: var(--text-sub);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  text-align: center;
+}
+
+/* 関連法規ブロック */
+.law-block {
+  background: var(--law-bg);
+  border-left: 3px solid var(--law-border);
+  padding: 12px 14px;
+  margin-top: 14px;
+  border-radius: var(--radius-sm);
+}
+
+.law-block-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--law-text);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.law-chips,
+.ref-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.law-chip {
+  background: var(--surface);
+  border: 1px solid var(--law-border);
+  color: var(--law-text);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 14px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.law-chip:active {
+  background: var(--law-bg);
+}
+
+/* アプリ未収録の法令（公職選挙法など）はクリック不可で表示のみ */
+.law-chip-disabled {
+  background: var(--bg);
+  color: var(--text-muted, #888);
+  border-color: var(--border, #ddd);
+  cursor: default;
+}
+
+/* 参照ブロック */
+.ref-block {
+  background: var(--ref-bg);
+  border-left: 3px solid var(--ref-border);
+  padding: 12px 14px;
+  margin-top: 12px;
+  border-radius: var(--radius-sm);
+}
+
+.ref-block-label {
+  font-size: 10.5px;
+  font-weight: 700;
+  color: var(--ref-text);
+  margin-bottom: 8px;
+  letter-spacing: 0.1em;
+}
+
+.ref-chip {
+  background: var(--surface);
+  border: 1px solid var(--ref-border);
+  color: var(--ref-text);
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 5px 11px;
+  border-radius: 14px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.ref-chip:active {
+  background: var(--ref-bg);
+}
+
+/* 下部アクションバー */
+.detail-actionbar {
+  flex: 0 0 auto;
+  display: flex;
+  background: var(--surface);
+  border-top: 1px solid var(--border-soft);
+  padding: 10px 12px;
+  gap: 8px;
+}
+
+.action-btn {
+  flex: 1;
+  height: 44px;
+  background: var(--brand-pale);
+  border: 1px solid transparent;
+  color: var(--brand-dark);
+  font-size: 13.5px;
+  font-weight: 600;
+  border-radius: 10px;
+  transition: background 0.15s, transform 0.1s;
+}
+
+.action-btn:active {
+  transform: scale(0.97);
+  background: var(--brand-light);
+}
+
+.action-btn.bookmarked {
+  background: var(--brand);
+  color: var(--surface);
+  border-color: var(--brand);
+  box-shadow: var(--shadow-brand);
+}
+
+.action-btn.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* ===== 検索画面 ===== */
+.search-header {
+  flex: 0 0 auto;
+  background: var(--surface);
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--border-soft);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.search-input {
+  width: 100%;
+  height: 40px;
+  background: var(--brand-pale);
+  color: var(--text);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 14px;
+  outline: none;
+  transition: background 0.15s, border-color 0.15s, box-shadow 0.15s;
+}
+
+.search-input::placeholder {
+  color: var(--text-mute);
+}
+
+.search-input:focus {
+  background: var(--surface);
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px rgba(74, 144, 194, 0.15);
+}
+
+.search-results {
+  padding: 12px;
+  gap: 8px;
+}
+
+.search-results .search-item {
+  display: flex;
+  flex-direction: column;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  text-align: left;
+  width: 100%;
+  gap: 5px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 0.1s, background 0.15s;
+}
+
+.search-results .search-item:active {
+  transform: scale(0.985);
+  background: var(--brand-pale);
+}
+
+.search-item-chapter {
+  font-size: 11px;
+  color: var(--brand);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.search-item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.search-item-snippet {
+  font-size: 12.5px;
+  color: var(--text-sub);
+  line-height: 1.55;
+  word-break: break-word;
+}
+
+.search-item-snippet mark,
+.search-item-title mark {
+  background: var(--mark-bg);
+  color: var(--text);
+  padding: 0 2px;
+  border-radius: 2px;
+  font-weight: 700;
+}
+
+.empty-message {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  color: var(--text-sub);
+  font-size: 13px;
+  text-align: center;
+}
+
+/* ===== お気に入り画面 ===== */
+#bookmark-list.list {
+  padding-top: 4px;
+}
+
+/* グループ見出し（法令名 / 先例ソース名） */
+.bookmark-group-header {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--brand-dark);
+  padding: 14px 6px 6px;
+  letter-spacing: 0.08em;
+}
+
+.bookmark-group-header:first-child {
+  padding-top: 8px;
+}
+
+.bookmark-item {
+  display: flex;
+  align-items: center;
+  padding: 14px;
+  background: var(--surface);
+  border-radius: var(--radius-md);
+  gap: 10px;
+  box-shadow: var(--shadow-sm);
+  transition: background 0.15s;
+}
+
+.bookmark-item:active {
+  background: var(--brand-pale);
+}
+
+.bookmark-item .item-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  min-width: 0;
+}
+
+.bookmark-item .item-chapter {
+  font-size: 11px;
+  color: var(--brand);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+}
+
+.bookmark-item .item-title {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.bookmark-delete {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--brand-pale);
+  color: var(--text-sub);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: background 0.15s, color 0.15s;
+}
+
+.bookmark-delete:active {
+  background: var(--danger-bg);
+  color: var(--danger-text);
+}
+
+/* ===== トースト通知（共有・コピー時） ===== */
+.app-toast {
+  position: fixed;
+  left: 50%;
+  bottom: calc(var(--bottomnav-h) + 24px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%) translateY(20px);
+  background: var(--brand-dark);
+  color: var(--surface);
+  padding: 10px 20px;
+  border-radius: 24px;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  z-index: 3000;
+  max-width: calc(100vw - 40px);
+  white-space: nowrap;
+}
+
+.app-toast.show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* ===== エラー画面 ===== */
+.error-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(31, 58, 95, 0.7);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+}
+
+.error-box {
+  background: var(--surface);
+  border-radius: var(--radius-lg);
+  padding: 22px;
+  max-width: 360px;
+  width: 100%;
+  border-top: 4px solid var(--brand);
+  box-shadow: var(--shadow-lg);
+}
+
+.error-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--brand-dark);
+  margin-bottom: 12px;
+}
+
+.error-text {
+  font-size: 13px;
+  color: var(--text);
+  line-height: 1.6;
+  white-space: pre-wrap;
+}
