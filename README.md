@@ -77,6 +77,22 @@
 
 ---
 
+## スクリーンショット
+
+### ホーム画面
+![トップ画面（法規）](screenshot-home-law.png)
+![トップ画面（先例）](screenshot-home-senrei.png)
+
+### 閲覧画面
+![法規条文一覧](screenshot-law-toc.png)
+![先例録目次](screenshot-senrei-toc.png)
+
+### 先例詳細・検索
+![先例詳細（参照リンク）](screenshot-detail.png)
+![全文検索](screenshot-search.png)
+
+---
+
 ## 注意事項
 
 - 本アプリは個人の学習・研究目的で開発したものです。
